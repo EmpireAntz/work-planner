@@ -3,17 +3,34 @@
 // in the html.
 
 $(function () {
-  var currentTime = $('#currentDay').text(dayjs().format('MM/D/YYYY, h:mm A'))
-  $(".saveBtn").on('click', function() {
+  $('#currentDay').text(dayjs().format('MM/D/YYYY, h:mm A'))
+  var saveBtn = $(".saveBtn")
+  saveBtn.on('click', function() {
     var hour = $(this).parent().attr('id')
     var userInput = $(this).siblings('.description').val()
+    console.log(this)
     console.log("saved")
     console.log(hour)
-    console.log(userInput)
     localStorage.setItem(hour, userInput)
     var savedUserInput = localStorage.getItem(hour)
     console.log("this is what should save: " + savedUserInput)
- })
+    var timeBlock = $(".time-block")
+    timeBlock.each(function() {
+      var calendarHourText = this.children[0].textContent
+      var calendarHour
+      console.log(calendarHourText)
+      if (calendarHourText.includes('AM')) {
+        calendarHour = parseInt(calendarHourText.replace('AM','').trim())
+      }
+      else {
+        calendarHour = parseInt(calendarHourText.replace('PM','').trim())
+      }
+      console.log(calendarHour)
+      var currentHour = dayjs().hour()
+      console.log(currentHour)
+    })
+  })
+})
 
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
@@ -33,4 +50,3 @@ $(function () {
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-})
