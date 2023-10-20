@@ -24,10 +24,27 @@ $(function () {
       }
       else {
         calendarHour = parseInt(calendarHourText.replace('PM','').trim())
+        if (calendarHour !== 12) {
+          calendarHour += 12
+        }
       }
       console.log(calendarHour)
       var currentHour = dayjs().hour()
+      var textArea = $('.description')
       console.log(currentHour)
+      if (calendarHour < currentHour) {
+        console.log('past hour')
+       console.log(textArea)
+       textArea.addClass('past')
+      }
+      else if (calendarHour === currentHour) {
+        console.log('present hour')
+        textArea.addClass('present')
+      }
+      else {
+        console.log('future hour')
+        textArea.addClass('future')
+      }
     })
   })
 })
