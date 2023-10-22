@@ -1,66 +1,70 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-
 $(function () {
-  //Displays the date and time 
+  //Displays the date and time using dayjs
   $('#currentDay').text(dayjs().format('MM/D/YYYY, h:mm A'))
-  
+  //Calls a function that updates the color of the timeblock based on time of day
   updateTimeBlockStyle()
-
+  //Calls a function that displays the saved text in the timeblock
   loadTextAreaValues() 
-  
-  var saveBtn = $(".saveBtn")
-  
-  saveBtn.on('click', function() {
+  //Function when the save button is clicked it will save the input value
+  $(".saveBtn").on('click', function() {
+    //Variable for the current hour time blocks id 
     var hour = $(this).parent().attr('id')
+    //Variable for the text area where theuser input will be 
     var userInput = $(this).siblings('.description').val()
-    
+    //Saves a key item pair with the key as the current hour time block and the value as whatever the saved user input is 
     localStorage.setItem(hour, userInput)
   })
-
+  //Function that displays the saved user input from local storage
   function loadTextAreaValues() {
+    //Iterates through each time block and runs a fucntion on each one
     $(".time-block").each(function() {
-        var hour = $(this).attr('id')
-        var savedValue = localStorage.getItem(hour)
-        
-        if (savedValue) {
-          $(this).find('.description').val(savedValue)
-        }
+      //Gets the ID of the timeblock and will represent the hour 
+      var hour = $(this).attr('id')
+      //Gets the saved value from local storage with the hour as the key
+      var savedValue = localStorage.getItem(hour)
+      //Sets the saved value to the corresponding time block text area
+      $(this).find('.description').val(savedValue)
     })
   }
-
+  //Function to update the style of each time block based on the current time
   function updateTimeBlockStyle() {
+    //Gets the current hour using dayjs
     var currentHour = dayjs().hour()
+    //Gets the time block element
     var timeBlock = $(".time-block")
-  
+    //Iterates through each timeblock 
     timeBlock.each(function() {
+      //Gets the text content of the first div nested in the time block 
       var calendarHourText = this.children[0].textContent
+      //Declares a variable for the calendar hour that we will use later
       var calendarHour
-      
-      console.log(calendarHourText)
-      
+      //Makes it so if the text content includes AM then it removes the suffix so that its just a number
       if (calendarHourText.includes('AM')) {
         calendarHour = parseInt(calendarHourText.replace('AM','').trim())
+        //Makes our code reuseable if we wanted to do a full 24 hour calendar
+        if (calendarHour ===12) {
+          calendarHour = 0
+        }
       }
+      //Otheriwse if the text content includes PM then we will remove the suffx and add 12 hours unless it is 12
       else {
         calendarHour = parseInt(calendarHourText.replace('PM','').trim())
+        //This converts our 12 hour calender to 24 to use and compare with dayjs
         if (calendarHour !== 12) {
           calendarHour += 12
         }
       }
-      
-      console.log(calendarHour)
-      console.log(currentHour)
-      
+      //Selects the text area element within the timeblock
       var textArea = $(this).find('.description')
-      
+      //Makes it so if the hour in our timeblock is less than the current hour from dayjs then the html will update to have the bootstrap class of past
       if (calendarHour < currentHour) {
         textArea.addClass('past')
       }
+      //Otherwise if the hour in the timeblock is equal to the current dayjs hour then the html class is updated to present
       else if (calendarHour === currentHour) {
         textArea.addClass('present')
       }
+      //If the timeblock hour is greater than the dayjs current hour than the html will get a class of future
       else {
         textArea.addClass('future')
       }
@@ -68,21 +72,3 @@ $(function () {
   }
 })
 
-// TODO: Add a listener for click events on the save button. This code should
-// use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
