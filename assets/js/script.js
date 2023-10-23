@@ -1,6 +1,9 @@
 $(function () {
   //Displays the date and time using dayjs
-  $('#currentDay').text(dayjs().format('MM/D/YYYY, h:mm A'))
+  function timeOfDay () {
+    $('#currentDay').text(dayjs().format('MM/D/YYYY, h:mm:ss A'))
+  } 
+  setInterval(timeOfDay, 1000)
   //Calls a function that updates the color of the timeblock based on time of day
   updateTimeBlockStyle()
   //Calls a function that displays the saved text in the timeblock
@@ -42,7 +45,7 @@ $(function () {
       if (calendarHourText.includes('AM')) {
         calendarHour = parseInt(calendarHourText.replace('AM','').trim())
         //Makes our code reuseable if we wanted to do a full 24 hour calendar
-        if (calendarHour ===12) {
+        if (calendarHour === 12) {
           calendarHour = 0
         }
       }
