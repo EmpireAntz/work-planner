@@ -1,13 +1,18 @@
 $(function () {
-  //Displays the date and time using dayjs
+  //Function that displays the date and time using dayjs
   function timeOfDay () {
     $('#currentDay').text(dayjs().format('MM/D/YYYY, h:mm:ss A'))
   } 
-  setInterval(timeOfDay, 1000)
   //Calls a function that updates the color of the timeblock based on time of day
   updateTimeBlockStyle()
   //Calls a function that displays the saved text in the timeblock
   loadTextAreaValues() 
+  //Calls a function that displays the date and time
+  timeOfDay()
+  //Makes the time of day function run and update every second
+  setInterval(timeOfDay, 1000)
+  //Makes the style of the timeblocks update every second so that right when the hour changes the timeblock style also changes
+  setInterval(updateTimeBlockStyle, 1000)
   //Function when the save button is clicked it will save the input value
   $(".saveBtn").on('click', function() {
     //Variable for the current hour time blocks id 
@@ -71,6 +76,7 @@ $(function () {
       else {
         textArea.addClass('future')
       }
+    
     })
   }
 })
